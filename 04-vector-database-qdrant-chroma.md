@@ -32,7 +32,7 @@ Rule of thumb:
 Each vector record should include:
 
 - `id`: stable unique ID
-- `embedding`: numeric vector
+- `embedding`: numeric vector (dimension must match model — e.g. **1536** for `text-embedding-ada-002`)
 - `text`: original chunk text
 - `metadata`:
   - `doc_id`
@@ -43,6 +43,8 @@ Each vector record should include:
   - `updated_at`
 
 Good metadata is required for useful citations and filters.
+
+> **Important:** Never mix embeddings from different models in the same collection. Dimension and meaning space differ.
 
 ## Indexing pipeline checklist
 
@@ -92,6 +94,40 @@ Better retrieval quality directly improves:
 - Perceived intelligence of assistant
 
 Even with a strong LLM, poor retrieval means poor UX.
+
+## Quick code snippets
+
+### Chroma (local)
+
+```ts
+import { ChromaClient } from "chromadb";
+
+const client = new ChromaClient();
+const collection = await client.getOrCreateCollection({ name: "policies", metadata: { "hnsw:space": "cosine" } });
+
+// Add (embedding dim must match model — 1536 for text-embedding-ada-002)
+await collection.add({
+  ids: ["chunk-1"],
+  embeddings: [[0.1, -0.2, ...]],
+  documents: ["Employees receive 15 days annual vacation"],
+  metadatas: [{ doc_id: "hr-handbook", page: 15 }],
+});
+
+// Query
+const results = await collection.query({ queryEmbeddings: [queryVector], nResults: 8 });
+```
+
+### Qdrant
+
+```ts
+import { QdrantClient } from "@qdrant/js-client-rest";
+
+const client = new QdrantClient({ url: "http://localhost:6333" });
+await client.upsert("policies", { points: [{ id: "chunk-1", vector: embedding, payload: { text, doc_id, page } }] });
+const { points } = await client.search("policies", { vector: queryEmbedding, limit: 8 });
+```
+
+> **Note:** Package APIs may vary; check `chromadb` and `@qdrant/js-client-rest` docs for your version.
 
 ## Practice task
 

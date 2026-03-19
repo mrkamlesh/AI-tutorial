@@ -75,13 +75,21 @@ Use reviewer feedback to improve:
 
 ## Dashboard starter layout
 
-Panel 1: traffic and latency
+| Panel | Metrics |
+|-------|---------|
+| 1. Traffic & latency | Requests/min, P50/P95/P99 latency, error rate |
+| 2. Quality | Groundedness rate, citation validity, "I don't know" rate |
+| 3. Safety | Blocked prompts, policy violations, content filter hits |
+| 4. Failures | Top 20 failed questions, failure reasons, retry rate |
 
-Panel 2: quality metrics (groundedness, citation validity)
+## Tools and platforms
 
-Panel 3: safety metrics (blocked prompts, policy violations)
-
-Panel 4: top failed questions and failure reasons
+| Tool | Use case |
+|------|----------|
+| **LangSmith** (LangChain) | Traces, evals, datasets for LangChain apps |
+| **Langfuse** | Open-source observability for LLM apps |
+| **Weights & Biases** | Experiment tracking, model eval |
+| **OpenTelemetry** | Standard traces/metrics; use with custom exporters |
 
 ## Frontend integration ideas
 

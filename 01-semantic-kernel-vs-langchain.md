@@ -41,12 +41,14 @@ Use LangChain when you want many adapters quickly and broad community examples.
 ## Quick comparison
 
 | Area | Semantic Kernel | LangChain |
-|---|---|---|
+|------|-----------------|-----------|
 | Best fit | Azure + enterprise workflows | Fast prototyping + broad ecosystem |
 | Architecture style | Skills/plugins and planners | Chains/runnables/agents |
 | Language strength | .NET, Python, Java | Python, JavaScript/TypeScript |
 | Integrations | Strong Microsoft stack | Very wide third-party support |
 | Learning curve | Moderate, opinionated | Moderate, many patterns |
+
+> **Note:** LangChain's API changes between versions. Always check the [LangChain JS docs](https://js.langchain.com/) for current patterns.
 
 ## Mental model for a frontend developer
 
@@ -60,25 +62,29 @@ Use LangChain when you want many adapters quickly and broad community examples.
 ### LangChain (TypeScript) shape
 
 ```ts
-// pseudo-shape, not full production code
-const retriever = vectorStore.asRetriever();
-const chain = createRetrievalChain({
-  retriever,
-  llm,
-});
+// Conceptual pattern — check @langchain/core and @langchain/openai for current API
+const retriever = vectorStore.asRetriever({ k: 8 });
+const llm = new ChatOpenAI({ model: "gpt-4", temperature: 0.2 });
+// Compose: retrieve docs → stuff into prompt → LLM generates (see createRetrievalChain / createStuffDocumentsChain)
 const result = await chain.invoke({ input: "How many vacation days?" });
 ```
 
 ### Semantic Kernel shape
 
 ```ts
-// conceptual example
-const kernel = createKernel();
+// Conceptual example — see @microsoft/semantic-kernel
+import { Kernel } from "@microsoft/semantic-kernel";
+
+const kernel = new Kernel();
 kernel.addFunction("hr", "searchPolicy", searchPolicyFn);
 const answer = await kernel.invokePrompt("Answer with citations: {{$input}}", {
   input: "How many vacation days?",
 });
 ```
+
+### Alternative: LlamaIndex
+
+[LlamaIndex](https://www.llamaindex.ai/) is another popular RAG-focused framework. Use it when you want a document-centric API and strong retrieval abstractions out of the box.
 
 ## Which one should you start with?
 

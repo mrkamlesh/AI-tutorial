@@ -13,13 +13,21 @@ This folder contains a practical learning path for a frontend developer who is s
 
 ## Learning order
 
-1. `01-semantic-kernel-vs-langchain.md`
-2. `02-rag-pipeline-design.md`
-3. `03-azure-openai-llm-apis.md`
-4. `04-vector-database-qdrant-chroma.md`
-5. `05-mcp-for-genai-apps.md`
-6. `06-prompt-engineering-guardrails.md`
-7. `07-ai-observability-hallucination-monitoring.md`
+| # | Tutorial | Est. time |
+|---|----------|-----------|
+| 1 | [01 - Semantic Kernel vs LangChain](01-semantic-kernel-vs-langchain.md) | 30 min |
+| 2 | [02 - RAG Pipeline Design](02-rag-pipeline-design.md) | 45 min |
+| 3 | [03 - Azure OpenAI & LLM APIs](03-azure-openai-llm-apis.md) | 40 min |
+| 4 | [04 - Vector Database (Qdrant/Chroma)](04-vector-database-qdrant-chroma.md) | 40 min |
+| 5 | [05 - MCP for GenAI Apps](05-mcp-for-genai-apps.md) | 30 min |
+| 6 | [06 - Prompt Engineering & Guardrails](06-prompt-engineering-guardrails.md) | 35 min |
+| 7 | [07 - AI Observability & Hallucination Monitoring](07-ai-observability-hallucination-monitoring.md) | 35 min |
+
+## Prerequisites
+
+- Node.js 18+ (or Python 3.10+ if using Python examples)
+- Basic REST API and async/await familiarity
+- Azure account (for tutorial 03)
 
 ## Outcome after finishing
 

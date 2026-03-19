@@ -26,10 +26,11 @@ Important: in code, you often call a **deployment name**, not raw model name.
 ```ts
 import OpenAI from "openai";
 
+// Azure OpenAI uses a custom base URL; api-version is required (e.g. "2024-02-15-preview")
 const client = new OpenAI({
   apiKey: process.env.AZURE_OPENAI_API_KEY,
   baseURL: `${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/${process.env.AZURE_OPENAI_DEPLOYMENT}`,
-  defaultQuery: { "api-version": process.env.AZURE_OPENAI_API_VERSION },
+  defaultQuery: { "api-version": process.env.AZURE_OPENAI_API_VERSION ?? "2024-02-15-preview" },
   defaultHeaders: { "api-key": process.env.AZURE_OPENAI_API_KEY! },
 });
 
@@ -41,9 +42,44 @@ export async function askLLM(question: string) {
       { role: "user", content: question },
     ],
     temperature: 0.2,
+    max_tokens: 2048,
   });
 
   return response.choices[0]?.message?.content ?? "";
+}
+```
+
+## Embeddings (for RAG indexing)
+
+Embeddings use a separate Azure deployment (e.g. `text-embedding-ada-002`):
+
+```ts
+const embeddingClient = new OpenAI({
+  apiKey: process.env.AZURE_OPENAI_API_KEY,
+  baseURL: `${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/${process.env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT}`,
+  defaultQuery: { "api-version": "2024-02-15-preview" },
+  defaultHeaders: { "api-key": process.env.AZURE_OPENAI_API_KEY! },
+});
+
+const { data } = await embeddingClient.embeddings.create({
+  model: process.env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT!,
+  input: "Employees receive 15 days annual vacation",
+});
+// data[0].embedding → number[] (1536 for ada-002)
+```
+
+## Streaming (for better UX)
+
+```ts
+const stream = await client.chat.completions.create({
+  model: process.env.AZURE_OPENAI_DEPLOYMENT!,
+  messages: [{ role: "user", content: question }],
+  stream: true,
+});
+
+for await (const chunk of stream) {
+  const text = chunk.choices[0]?.delta?.content ?? "";
+  if (text) process.stdout.write(text);
 }
 ```
 

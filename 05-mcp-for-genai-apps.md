@@ -4,6 +4,8 @@ MCP (Model Context Protocol) is a standard way for AI systems to connect to tool
 
 Think of MCP like "USB-C for AI tools": one standard interface, many integrations.
 
+> **Spec:** [modelcontextprotocol.io](https://modelcontextprotocol.io/) — official docs and SDKs
+
 ## Why MCP matters
 
 Without MCP, each tool integration is custom and brittle.
@@ -21,6 +23,14 @@ With MCP:
 - **Tool**: callable function with schema
 - **Resource**: read-only data exposed by URI
 - **Client**: agent/app that discovers and invokes tools
+
+## When to use MCP vs plain REST
+
+| Use MCP when… | Use plain REST when… |
+|---------------|----------------------|
+| AI agent needs to discover tools dynamically | Fixed set of backend endpoints |
+| Multiple clients (Cursor, Claude, custom) share tools | Single app, known API surface |
+| You want standardized tool schemas | Simple CRUD, no AI tool-calling |
 
 ## How it fits in a RAG app
 
